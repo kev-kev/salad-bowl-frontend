@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# SaladBowl
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Work in Progress**
 
-## Available Scripts
+Online multiplayer game made using websockets and React. 
+Submit words, then players take turns giving clues to try to get their team to guess the words.
 
-In the project directory, you can run:
+<img src="saladBowl.png" width="500"/>
 
-### `yarn start`
+Backend code: https://github.com/kev-kev/salad-bowl-backend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 1. Clone repositories
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+In a terminal window, run the following commands:
 
-### `yarn test`
+```
+clone frontend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+$ git clone git@github.com:kev-kev/salad-bowl-frontend.git
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+clone backend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+$ git clone git@github.com:kev-kev/salad-bowl-backend.git
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 2. Install dependencies (optionally you can install [yarn](https://yarnpkg.com/)):
 
-### `yarn eject`
+Navigate to the cloned frontend repo.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Run:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`npm install`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+or if you chose yarn, just run `yarn`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Then, cd into the backend repo and run:
 
-## Learn More
+`bundle install`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 3. Run the app:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+In terminal, cd to the frontend folder and run:
 
-### Code Splitting
+`npm start`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Then, in the backend folder, run: 
 
-### Analyzing the Bundle Size
+`node app.js`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This will start the React app and backend server on ports 3000 and 4000 respectively.
