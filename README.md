@@ -1,6 +1,6 @@
 # SaladBowl
 
-**Work in Progress**
+## **Work in Progress**
 
 Online multiplayer game made using websockets and React. 
 Submit words, then players take turns giving clues to try to get their team to guess the words.

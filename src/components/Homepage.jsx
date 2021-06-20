@@ -4,7 +4,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 import saladBowlSVG from "../assets/images/saladbowl.svg";
 
-function makeid() {
+function createRoomCode() {
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   var charactersLength = characters.length;
@@ -18,19 +18,24 @@ function Homepage(props) {
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
   const { setRoomCode, socket, setSocket } = useContext(GlobalContext);
 
-  const createNewRoom = () => {
+  useEffect(() => {
     const serverUrl = "http://localhost:4001/";
-    const roomCode = makeid();
-    const socket = socketIOClient(serverUrl);
-    setSocket(socket);
-    setRoomCode(roomCode);
+    setSocket(socketIOClient(serverUrl));
+  }, []);
 
+  const createNewRoom = () => {
+    const roomCode = createRoomCode();
+    setRoomCode(roomCode);
     socket.emit("set room code", roomCode);
     socket.emit("join room", roomCode);
   };
 
   const joinRoom = (code) => {
-    socket.emit("join room", code);
+    if (code.length != 5) {
+      console.log("Invalid room code");
+    } else {
+      socket.emit("join room", code);
+    }
   };
 
   return (
