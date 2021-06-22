@@ -4,6 +4,9 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 import saladBowlSVG from "../assets/images/saladbowl.svg";
 
+const serverUrl = "http://localhost:4001/";
+const socket = socketIOClient(serverUrl);
+
 function createRoomCode() {
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -16,18 +19,23 @@ function createRoomCode() {
 
 function Homepage(props) {
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
-  const { setRoomCode, socket, setSocket } = useContext(GlobalContext);
+  const [inRoom, setInRoom] = useState(false);
+  const [shouldShowLogo, setShouldShowLogo] = useState(true);
+  // const { setRoomCode, socket, setSocket } = useContext(GlobalContext);
 
   useEffect(() => {
-    const serverUrl = "http://localhost:4001/";
-    setSocket(socketIOClient(serverUrl));
+    socket.on("receive toggle logo", () => {
+      console.log("toggled in frontend");
+      setShouldShowLogo(false);
+    });
   }, []);
 
   const createNewRoom = () => {
     const roomCode = createRoomCode();
-    setRoomCode(roomCode);
-    socket.emit("set room code", roomCode);
+    // setRoomCode(roomCode);
+    socket.emit("create room", roomCode);
     socket.emit("join room", roomCode);
+    setEnteredRoomCode(roomCode);
   };
 
   const joinRoom = (code) => {
@@ -35,12 +43,18 @@ function Homepage(props) {
       console.log("Invalid room code");
     } else {
       socket.emit("join room", code);
+      setEnteredRoomCode(code);
     }
+  };
+
+  const handleTest = (enteredRoomCode) => {
+    console.log("entered room code: ", enteredRoomCode);
+    socket.emit("toggle logo", enteredRoomCode);
   };
 
   return (
     <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-      <img src={saladBowlSVG} className="home-logo" />
+      {shouldShowLogo && <img src={saladBowlSVG} className="home-logo" />}
       <h3 className="mb-5">Salad Bowl</h3>
       <Button
         className="home-button mb-4"
@@ -57,7 +71,9 @@ function Homepage(props) {
           size="lg"
           type="text"
           placeholder="Enter Room Code"
-          onChange={(e) => setEnteredRoomCode(e.target.value)}
+          onChange={(e) => {
+            setEnteredRoomCode(e.target.value);
+          }}
         />
         <Button
           className="home-button mb-0"
@@ -67,6 +83,14 @@ function Homepage(props) {
           Join Room
         </Button>
       </Form>
+      <br />
+      <Button
+        className="home-button mb-0"
+        variant="outline-danger"
+        onClick={() => handleTest(enteredRoomCode)}
+      >
+        Test
+      </Button>
     </div>
   );
 }
