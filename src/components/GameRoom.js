@@ -4,12 +4,8 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 
 const GameRoom = () => {
-  const { roomCode, setUsername, username } = useContext(GlobalContext);
+  const { roomCode, createUser, username } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
-
-  const createUser = () => {
-    setUsername(usernameInput);
-  };
 
   return (
     <>
@@ -23,7 +19,7 @@ const GameRoom = () => {
             setUsernameInput(e.target.value);
           }}
         />
-        <Button onClick={() => createUser()}>Submit</Button>
+        <Button onClick={() => createUser(usernameInput)}>Submit</Button>
       </Form>
       <div>Name: {username}</div>
     </>
