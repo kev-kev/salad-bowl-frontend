@@ -4,6 +4,7 @@ import "../index.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React from "react";
 import Homepage from "./Homepage";
+import GameRoom from "./GameRoom";
 import { GlobalProvider } from "../context/GlobalContext";
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
       <Router>
         <div>
           <Switch>
+            <Route path="/rooms/:roomcode">
+              <GameRoom />
+            </Route>
             <Route path="/">
               <Homepage />
             </Route>

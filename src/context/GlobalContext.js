@@ -2,8 +2,8 @@ import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 
 const initialState = {
-  socket: null,
   roomCode: "",
+  username: "",
 };
 
 export const GlobalContext = createContext(initialState);
@@ -17,20 +17,20 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  function setSocket(socket) {
+  function setUsername(username) {
     dispatch({
-      type: "SET_SOCKET",
-      payload: socket,
+      type: "SET_USERNAME",
+      payload: username,
     });
   }
 
   return (
     <GlobalContext.Provider
       value={{
-        socket: state.socket,
         roomCode: state.roomCode,
-        setSocket,
         setRoomCode,
+        username: state.username,
+        setUsername,
       }}
     >
       {children}

@@ -4,11 +4,30 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 
 const GameRoom = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const { roomCode, setUsername, username } = useContext(GlobalContext);
+  const [usernameInput, setUsernameInput] = useState("");
 
-export default GameRoom
+  const createUser = () => {
+    setUsername(usernameInput);
+  };
+
+  return (
+    <>
+      <div>Room: {roomCode}</div>
+      <Form>
+        <Form.Control
+          size="lg"
+          type="text"
+          placeholder="Enter Username"
+          onChange={(e) => {
+            setUsernameInput(e.target.value);
+          }}
+        />
+        <Button onClick={() => createUser()}>Submit</Button>
+      </Form>
+      <div>Name: {username}</div>
+    </>
+  );
+};
+
+export default GameRoom;

@@ -1,5 +1,6 @@
 import socketIOClient from "socket.io-client";
 import { Button, Form } from "react-bootstrap/";
+import { useHistory } from "react-router-dom";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 import saladBowlSVG from "../assets/images/saladbowl.svg";
@@ -8,12 +9,17 @@ const serverUrl = "http://localhost:4001/";
 const socket = socketIOClient(serverUrl);
 
 function Homepage(props) {
+  const { setRoomCode } = useContext(GlobalContext);
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
   const [inRoom, setInRoom] = useState(false);
+  const history = useHistory();
 
-  const createNewRoom = () => {
+  const createRoom = () => {
+    // using history to programmatically change the url params after creating a room
     socket.emit("create room", (response) => {
       socket.emit("join room", response.code);
+      history.push(`/rooms/${response.code}`);
+      setRoomCode(response.code);
     });
   };
 
@@ -33,7 +39,7 @@ function Homepage(props) {
         className="home-button mb-4"
         variant="outline-primary"
         size="lg"
-        onClick={() => createNewRoom()}
+        onClick={() => createRoom()}
       >
         Create Room
       </Button>
@@ -51,6 +57,7 @@ function Homepage(props) {
         <Button
           className="home-button mb-0"
           variant="outline-secondary"
+          href={"/rooms/" + enteredRoomCode}
           onClick={() => joinRoom(enteredRoomCode)}
         >
           Join Room
