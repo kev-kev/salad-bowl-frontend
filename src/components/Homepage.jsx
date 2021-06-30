@@ -8,20 +8,21 @@ import saladBowlSVG from "../assets/images/saladbowl.svg";
 const serverUrl = "http://localhost:4001/";
 const socket = socketIOClient(serverUrl);
 
-function Homepage(props) {
+function Homepage() {
   const { joinRoom } = useContext(GlobalContext);
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
   const history = useHistory();
 
   const handleCreateRoom = () => {
     socket.emit("create room", (response) => {
-      joinRoom(response.code);
-      history.push(`/rooms/${response.code}`);
+      console.log("create room response code: ", response.room.code);
+      joinRoom(response.room.code);
+      history.push(`/rooms/${response.room.code}`);
     });
   };
 
   const handleJoinRoom = (code) => {
-    if (code.length != 5) {
+    if (code.length !== 5) {
       console.log("Invalid room code");
     } else {
       code = code.toUpperCase();
@@ -32,7 +33,11 @@ function Homepage(props) {
 
   return (
     <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-      <img src={saladBowlSVG} className="home-logo" />
+      <img
+        src={saladBowlSVG}
+        className="home-logo"
+        alt="image of a dish containing greens and other veggies"
+      />
       <h3 className="mb-5">Salad Bowl</h3>
       <Button
         className="home-button mb-4"

@@ -8,6 +8,7 @@ const socket = socketIOClient(serverUrl);
 const initialState = {
   roomCode: "",
   username: "",
+  room: null,
 };
 
 export const GlobalContext = createContext(initialState);
@@ -15,11 +16,13 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   function joinRoom(code) {
-    dispatch({
-      type: "SET_ROOM_CODE",
-      payload: code,
+    console.log("joining room: ", code);
+    socket.emit("join room", code, (response) => {
+      dispatch({
+        type: "SET_ROOM",
+        payload: response.room,
+      });
     });
-    socket.emit("join room", code);
   }
 
   function createUser(username) {
@@ -30,6 +33,10 @@ export const GlobalProvider = ({ children }) => {
     socket.emit("create user", username, state.roomCode);
   }
 
+  function startGame(code) {
+    socket.emit("start game", code);
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -37,6 +44,8 @@ export const GlobalProvider = ({ children }) => {
         joinRoom,
         username: state.username,
         createUser,
+        startGame,
+        room: state.room,
       }}
     >
       {children}
