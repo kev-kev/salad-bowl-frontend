@@ -1,6 +1,5 @@
 import socketIOClient from "socket.io-client";
 import { Button, Form } from "react-bootstrap/";
-import { useHistory } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import saladBowlSVG from "../assets/images/saladbowl.svg";
@@ -11,13 +10,11 @@ const socket = socketIOClient(serverUrl);
 function Homepage() {
   const { joinRoom } = useContext(GlobalContext);
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
-  const history = useHistory();
 
   const handleCreateRoom = () => {
     socket.emit("create room", (response) => {
       console.log("create room response code: ", response.room.code);
       joinRoom(response.room.code);
-      history.push(`/rooms/${response.room.code}`);
     });
   };
 
@@ -27,7 +24,6 @@ function Homepage() {
     } else {
       code = code.toUpperCase();
       joinRoom(code);
-      history.push(`/rooms/${code}`);
     }
   };
 
@@ -48,7 +44,13 @@ function Homepage() {
         Create Room
       </Button>
       <span className="mb-4">- or -</span>
-      <Form className="d-flex">
+      <Form
+        className="d-flex"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleJoinRoom(enteredRoomCode);
+        }}
+      >
         <Form.Control
           className="mr-2"
           size="lg"
@@ -61,7 +63,7 @@ function Homepage() {
         <Button
           className="home-button mb-0"
           variant="outline-secondary"
-          onClick={() => handleJoinRoom(enteredRoomCode)}
+          type="submit"
         >
           Join Room
         </Button>

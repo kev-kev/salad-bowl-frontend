@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 import socketIOClient from "socket.io-client";
+import history from "../history";
 
 const serverUrl = "http://localhost:4001/";
 const socket = socketIOClient(serverUrl);
@@ -22,6 +23,7 @@ export const GlobalProvider = ({ children }) => {
         type: "SET_ROOM",
         payload: response.room,
       });
+      history.push(`/rooms/${code}`);
     });
   }
 
