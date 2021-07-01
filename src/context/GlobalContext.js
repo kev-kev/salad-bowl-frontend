@@ -27,12 +27,12 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  function createUser(username) {
+  function createUser(username, roomCode) {
     dispatch({
       type: "SET_USERNAME",
       payload: username,
     });
-    socket.emit("create user", username, state.roomCode);
+    socket.emit("create user", username, roomCode);
   }
 
   function startGame(code) {
