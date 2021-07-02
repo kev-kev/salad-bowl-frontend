@@ -10,6 +10,7 @@ const initialState = {
   roomCode: "",
   username: "",
   room: null,
+  owner: null,
 };
 
 export const GlobalContext = createContext(initialState);
@@ -18,10 +19,10 @@ export const GlobalProvider = ({ children }) => {
 
   function joinRoom(code) {
     console.log("joining room: ", code);
-    socket.emit("join room", code, (response) => {
+    socket.emit("join room", code, (res) => {
       dispatch({
         type: "SET_ROOM",
-        payload: response.room,
+        payload: res.room,
       });
       history.push(`/rooms/${code}`);
     });
@@ -32,11 +33,21 @@ export const GlobalProvider = ({ children }) => {
       type: "SET_USERNAME",
       payload: username,
     });
-    socket.emit("create user", username, roomCode);
+    socket.emit("create user", username, roomCode, (res) => {
+      dispatch({
+        type: "SET_ROOM",
+        payload: res.room,
+      });
+    });
   }
 
   function startGame(code) {
-    socket.emit("start game", code);
+    socket.emit("start game", code, (res) => {
+      dispatch({
+        type: "SET_ROOM",
+        payload: res.room,
+      });
+    });
   }
 
   return (

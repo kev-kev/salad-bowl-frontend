@@ -8,6 +8,12 @@ const GameRoom = () => {
   const { createUser, username, startGame, room } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
 
+  useEffect(() => {
+    if (room.gameInProgress) {
+      console.log("Frontend game started!");
+    }
+  }, [room]);
+
   const renderUsernameForm = () => {
     if (username) {
       return <div>Name: {username}</div>;
@@ -33,6 +39,12 @@ const GameRoom = () => {
     }
   };
 
+  const renderStartGameButton = () => {
+    if (!room.gameInProgress && room.roomOwner === username) {
+      return <Button onClick={() => startGame(room.code)}>Start Game</Button>;
+    }
+  };
+
   if (!room) {
     return <Redirect to="/" />;
   } else {
@@ -40,8 +52,7 @@ const GameRoom = () => {
       <>
         <div>Room: {room.code}</div>
         {renderUsernameForm()}
-
-        <Button onClick={() => startGame()}>Start Game</Button>
+        {renderStartGameButton()}
       </>
     );
   }
