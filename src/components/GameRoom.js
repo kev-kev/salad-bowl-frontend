@@ -4,16 +4,50 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 
+const serverUrl = "http://localhost:4001/";
+const socket = socketIOClient(serverUrl);
+
 const GameRoom = () => {
   const { createUser, username, startGame, room } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
 
   useEffect(() => {
-    if (room.gameInProgress) {
-      console.log("Frontend game started!");
+    if (room) {
+      if (room.gameInProgress) {
+        console.log("Frontend game started!");
+      }
     }
   }, [room]);
 
+  const checkIfUniqueName = (nameStr) => {
+    // returns false if name is not unqique (non-case sensitive)
+    nameStr = nameStr.toLowerCase();
+    const len = Math.max(room.team1.users.length, room.team2.users.length);
+    for (let i = 0; i < len; i++) {
+      // if (room.team1.users[i]) {
+      if (
+        room.team1.users[i].name.toLowerCase() === nameStr ||
+        room.team2.users[i].name.toLowerCase() === nameStr
+      ) {
+        return false;
+      }
+      // }
+      // if (this.team2.users[i]) {
+      //   if (this.team2.users[i].name.toLowercase() === username) {
+      //     return false;
+      //   }
+      // }
+    }
+    return true;
+  };
+
+  const handleUsernameSubmit = () => {
+    if (checkIfUniqueName(usernameInput)) {
+      createUser(usernameInput, room.code);
+    } else {
+      console.log("Username is taken!");
+    }
+  };
   const renderUsernameForm = () => {
     if (username) {
       return <div>Name: {username}</div>;
@@ -22,7 +56,7 @@ const GameRoom = () => {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            createUser(usernameInput, room.code);
+            handleUsernameSubmit();
           }}
         >
           <Form.Control
