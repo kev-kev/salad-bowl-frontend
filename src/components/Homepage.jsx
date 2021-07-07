@@ -1,20 +1,24 @@
-import socketIOClient from "socket.io-client";
 import { Button, Form } from "react-bootstrap/";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import saladBowlSVG from "../assets/images/saladbowl.svg";
+import history from "../history";
 
-const serverUrl = "http://localhost:4001/";
-const socket = socketIOClient(serverUrl);
-
-function Homepage() {
-  const { joinRoom } = useContext(GlobalContext);
+function Homepage(props) {
+  const { joinRoom, clearState, updateRoom } = useContext(GlobalContext);
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
 
+  // Reset to initial state when rendering the home page
+  useEffect(() => {
+    clearState();
+  }, []);
+
   const handleCreateRoom = () => {
-    socket.emit("create room", (response) => {
-      console.log("create room response code: ", response.room.code);
-      joinRoom(response.room.code);
+    props.socket.emit("create room", (response) => {
+      props.socket.emit("join room", response.room.code, (res) => {
+        joinRoom(res.room.code, res.room);
+        history.push(`/rooms/${response.room.code}`);
+      });
     });
   };
 
@@ -23,7 +27,10 @@ function Homepage() {
       console.log("Invalid room code");
     } else {
       code = code.toUpperCase();
-      joinRoom(code);
+      props.socket.emit("join room", code, (res) => {
+        joinRoom(code, res.room);
+        history.push(`/rooms/${code}`);
+      });
     }
   };
 

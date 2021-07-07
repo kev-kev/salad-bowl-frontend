@@ -1,53 +1,53 @@
 import socketIOClient from "socket.io-client";
 import { Button, Form } from "react-bootstrap/";
-import React, { useContext, useState, useEffect, useRef } from "react";
-import { GlobalContext, GlobalProvider } from "../context/GlobalContext";
+import React, { useContext, useState, useEffect } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 
-const serverUrl = "http://localhost:4001/";
-const socket = socketIOClient(serverUrl);
-
-const GameRoom = () => {
-  const { createUser, username, startGame, room } = useContext(GlobalContext);
+const GameRoom = (props) => {
+  const { username, room, updateRoom, setUsername } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
 
   useEffect(() => {
-    if (room) {
-      if (room.gameInProgress) {
-        console.log("Frontend game started!");
-      }
-    }
-  }, [room]);
+    props.socket.on("new user created", (curRoom) => {
+      console.log("User created. Updating room.");
+      updateRoom(curRoom);
+    });
+
+    props.socket.on("game started", (curRoom) => {
+      console.log("Game Started! Updating room.");
+      updateRoom(curRoom);
+    });
+  }, []);
 
   const checkIfUniqueName = (nameStr) => {
-    // returns false if name is not unqique (non-case sensitive)
+    // Returns false if name is not unqique (non-case sensitive)
     nameStr = nameStr.toLowerCase();
     const len = Math.max(room.team1.users.length, room.team2.users.length);
     for (let i = 0; i < len; i++) {
-      // if (room.team1.users[i]) {
-      if (
-        room.team1.users[i].name.toLowerCase() === nameStr ||
-        room.team2.users[i].name.toLowerCase() === nameStr
-      ) {
-        return false;
+      if (room.team1.users[i]) {
+        if (room.team1.users[i].name.toLowerCase() === nameStr) {
+          return false;
+        }
       }
-      // }
-      // if (this.team2.users[i]) {
-      //   if (this.team2.users[i].name.toLowercase() === username) {
-      //     return false;
-      //   }
-      // }
+      if (room.team2.users[i]) {
+        if (room.team2.users[i].name.toLowerCase() === nameStr) {
+          return false;
+        }
+      }
     }
     return true;
   };
 
   const handleUsernameSubmit = () => {
     if (checkIfUniqueName(usernameInput)) {
-      createUser(usernameInput, room.code);
+      props.socket.emit("create user", usernameInput, room.code);
+      setUsername(usernameInput);
     } else {
       console.log("Username is taken!");
     }
   };
+
   const renderUsernameForm = () => {
     if (username) {
       return <div>Name: {username}</div>;
@@ -75,7 +75,11 @@ const GameRoom = () => {
 
   const renderStartGameButton = () => {
     if (!room.gameInProgress && room.roomOwner === username) {
-      return <Button onClick={() => startGame(room.code)}>Start Game</Button>;
+      return (
+        <Button onClick={() => props.socket.emit("start game", room.code)}>
+          Start Game
+        </Button>
+      );
     }
   };
 

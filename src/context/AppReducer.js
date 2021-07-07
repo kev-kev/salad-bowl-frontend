@@ -15,6 +15,10 @@ export default (state, action) => {
         ...state,
         username: action.payload,
       };
+    case "CLEAR_STATE":
+      return {
+        ...action.payload,
+      };
     default:
       return state;
   }
