@@ -1,4 +1,3 @@
-import socketIOClient from "socket.io-client";
 import { Button, Form } from "react-bootstrap/";
 import React, { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
@@ -20,8 +19,11 @@ const GameRoom = (props) => {
     });
   }, []);
 
-  const checkIfUniqueName = (nameStr) => {
-    // Returns false if name is not unqique (non-case sensitive)
+  const checkIfValidName = (nameStr) => {
+    // Returns false if name isn't present or unqique (non-case sensitive)
+    if (nameStr.length < 1) {
+      return false;
+    }
     nameStr = nameStr.toLowerCase();
     const len = Math.max(room.team1.users.length, room.team2.users.length);
     for (let i = 0; i < len; i++) {
@@ -40,11 +42,11 @@ const GameRoom = (props) => {
   };
 
   const handleUsernameSubmit = () => {
-    if (checkIfUniqueName(usernameInput)) {
+    if (checkIfValidName(usernameInput)) {
       props.socket.emit("create user", usernameInput, room.code);
       setUsername(usernameInput);
     } else {
-      console.log("Username is taken!");
+      console.log("Username is invalid!");
     }
   };
 

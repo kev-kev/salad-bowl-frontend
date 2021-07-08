@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../index.css";
 import history from "../history";
 import { Router, Switch, Route } from "react-router-dom";
-import React, { useEffect } from "react";
+import React from "react";
 import Homepage from "./Homepage";
 import GameRoom from "./GameRoom";
 import { GlobalProvider } from "../context/GlobalContext";
