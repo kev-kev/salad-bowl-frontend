@@ -5,14 +5,11 @@ import saladBowlSVG from "../assets/images/saladbowl.svg";
 import history from "../history";
 
 function Homepage(props) {
-  const { joinRoom, clearState, room, username } = useContext(GlobalContext);
+  const { joinRoom, clearState } = useContext(GlobalContext);
   const [enteredRoomCode, setEnteredRoomCode] = useState("");
 
   // Reset to initial state when rendering the home page
   useEffect(() => {
-    // if (room) {
-    //   room.removeUser(username);
-    // }
     clearState();
   }, []);
 
