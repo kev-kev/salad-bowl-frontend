@@ -4,20 +4,8 @@ import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 
 const GameRoom = (props) => {
-  const { username, room, updateRoom, setUsername } = useContext(GlobalContext);
+  const { username, room, setUsername } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
-
-  useEffect(() => {
-    props.socket.on("new user created", (curRoom) => {
-      console.log("User created. Updating room.");
-      updateRoom(curRoom);
-    });
-
-    props.socket.on("game started", (curRoom) => {
-      console.log("Game Started! Updating room.");
-      updateRoom(curRoom);
-    });
-  }, []);
 
   const checkIfValidName = (nameStr) => {
     // Returns false if name isn't present or unqique (non-case sensitive)

@@ -10,9 +10,9 @@ function Homepage(props) {
 
   // Reset to initial state when rendering the home page
   useEffect(() => {
-    if (room) {
-      room.removeUser(username);
-    }
+    // if (room) {
+    //   room.removeUser(username);
+    // }
     clearState();
   }, []);
 

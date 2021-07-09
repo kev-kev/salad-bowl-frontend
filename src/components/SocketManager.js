@@ -1,20 +1,22 @@
 import React, { useContext, useEffect } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
 const SocketManager = (props) => {
-  const { username, room, updateRoom, setUsername } = useContext(GlobalContext);
+  const { updateRoom } = useContext(GlobalContext);
 
   useEffect(() => {
-    props.socket.on(
-      "new user created",
-      (curRoom) => {
-        console.log("User created. Updating room.");
-        updateRoom(curRoom);
-      },
-      [room]
-    );
-  });
+    props.socket.on("new user created", (curRoom) => {
+      console.log("User created. Updating room.");
+      updateRoom(curRoom);
+    });
 
-  return;
+    props.socket.on("game started", (curRoom) => {
+      console.log("Game Started! Updating room.");
+      updateRoom(curRoom);
+    });
+  }, []);
+
+  return null;
 };
 
 export default SocketManager;

@@ -5,6 +5,7 @@ import { Router, Switch, Route } from "react-router-dom";
 import React from "react";
 import Homepage from "./Homepage";
 import GameRoom from "./GameRoom";
+import SocketManager from "./SocketManager";
 import { GlobalProvider } from "../context/GlobalContext";
 import socketIOClient from "socket.io-client";
 
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <GlobalProvider>
+      <SocketManager socket={socket} />
       <Router history={history}>
         <Switch>
           <Route path="/rooms/:roomcode">
