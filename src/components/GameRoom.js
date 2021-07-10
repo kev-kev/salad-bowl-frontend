@@ -7,11 +7,20 @@ const GameRoom = (props) => {
   const { username, room, setUsername } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
 
+  useEffect(() => {
+    // listening to back and window closing
+    window.onpopstate = (e) => {
+      console.log("going back!");
+      props.socket.emit("page close", room.code, username);
+    };
+    window.onbeforeunload = () => {
+      props.socket.emit("page close", room.code, username);
+    };
+  });
+
   const checkIfValidName = (nameStr) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
-    if (nameStr.length < 1) {
-      return false;
-    }
+    if (nameStr.length < 1) return false;
     nameStr = nameStr.toLowerCase();
     const len = Math.max(room.team1.users.length, room.team2.users.length);
     for (let i = 0; i < len; i++) {
