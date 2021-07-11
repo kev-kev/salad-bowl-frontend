@@ -11,10 +11,10 @@ const GameRoom = (props) => {
     // listening to back and window closing
     window.onpopstate = (e) => {
       console.log("going back!");
-      props.socket.emit("page close", room.code, username);
+      if (room) props.socket.emit("page close", room.code, username);
     };
     window.onbeforeunload = () => {
-      props.socket.emit("page close", room.code, username);
+      if (room) props.socket.emit("page close", room.code, username);
     };
   });
 
