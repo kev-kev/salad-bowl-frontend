@@ -3,9 +3,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 
+const WORD_REGEX = /[\W_]/g;
+
 const GameRoom = (props) => {
   const { username, room, setUsername } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
+  const [wordInput, setWordInput] = useState("");
+  const [explanationInput, setExplanationInput] = useState("");
 
   useEffect(() => {
     // listening to back and window closing
@@ -18,14 +22,17 @@ const GameRoom = (props) => {
     };
   });
 
-  const checkIfValidName = (nameStr) => {
+  const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
-    if (nameStr.length < 1) return false;
-    nameStr = nameStr.toLowerCase();
+    if (name.length < 1) return false;
+    const nameStr = name.replace(WORD_REGEX, "").toLowerCase();
     const len = Math.max(room.team1.users.length, room.team2.users.length);
     for (let i = 0; i < len; i++) {
       if (room.team1.users[i]) {
-        if (room.team1.users[i].name.toLowerCase() === nameStr) {
+        if (
+          room.team1.users[i].name.replace(WORD_REGEX, "").toLowerCase() ===
+          nameStr
+        ) {
           return false;
         }
       }
@@ -65,6 +72,7 @@ const GameRoom = (props) => {
             onChange={(e) => {
               setUsernameInput(e.target.value);
             }}
+            value={usernameInput}
           />
           <Button type="submit">Submit</Button>
         </Form>
@@ -82,6 +90,54 @@ const GameRoom = (props) => {
     }
   };
 
+  const handleWordSubmit = () => {
+    if (wordInput && checkIfValidWord(wordInput)) {
+      props.socket.emit("submit word", wordInput, explanationInput);
+      setWordInput("");
+      setExplanationInput("");
+    }
+  };
+
+  const checkIfValidWord = (word) => {
+    const wordStr = word.replace(WORD_REGEX, "").toLowerCase();
+    for (let i = 0; i < room.deck.length; i++) {
+      let curWord = room.deck[i].word.replace(WORD_REGEX, "").toLowerCase();
+      if (wordStr === curWord) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const renderWordForm = () => {
+    if (room.gameInProgress) {
+      return (
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleWordSubmit();
+          }}
+        >
+          <Form.Control
+            size="lg"
+            type="text"
+            placeholder="Enter a Word or Short Phrase"
+            onChange={(e) => setWordInput(e.target.value)}
+            value={wordInput}
+          />
+          <Form.Control
+            size="lg"
+            type="text"
+            placeholder="Enter an Explanation (optional)"
+            onChange={(e) => setExplanationInput(e.target.value)}
+            value={explanationInput}
+          />
+          <Button type="submit">Submit</Button>
+        </Form>
+      );
+    }
+  };
+
   if (!room) {
     return <Redirect to="/" />;
   } else {
@@ -90,6 +146,7 @@ const GameRoom = (props) => {
         <div>Room: {room.code}</div>
         {renderUsernameForm()}
         {renderStartGameButton()}
+        {renderWordForm()}
       </>
     );
   }

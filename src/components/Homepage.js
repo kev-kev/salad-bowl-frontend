@@ -6,9 +6,9 @@ import history from "../history";
 
 function Homepage(props) {
   const { joinRoom, clearState } = useContext(GlobalContext);
-  const [enteredRoomCode, setEnteredRoomCode] = useState("");
+  const [roomCodeInput, setRoomCodeInput] = useState("");
 
-  // Reset to initial state when rendering the home page
+  // Reset to initial state on render.
   useEffect(() => {
     clearState();
   }, []);
@@ -55,7 +55,7 @@ function Homepage(props) {
         className="d-flex"
         onSubmit={(e) => {
           e.preventDefault();
-          handleJoinRoom(enteredRoomCode);
+          handleJoinRoom(roomCodeInput);
         }}
       >
         <Form.Control
@@ -64,8 +64,9 @@ function Homepage(props) {
           type="text"
           placeholder="Enter Room Code"
           onChange={(e) => {
-            setEnteredRoomCode(e.target.value);
+            setRoomCodeInput(e.target.value);
           }}
+          value={roomCodeInput}
         />
         <Button
           className="home-button mb-0"
