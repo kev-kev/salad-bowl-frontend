@@ -5,7 +5,7 @@ import saladBowlSVG from "../assets/images/saladbowl.svg";
 import history from "../history";
 
 function Homepage(props) {
-  const { joinRoom, clearState } = useContext(GlobalContext);
+  const { clearState, error } = useContext(GlobalContext);
   const [roomCodeInput, setRoomCodeInput] = useState("");
 
   // Reset to initial state on render.
@@ -16,7 +16,6 @@ function Homepage(props) {
   const handleCreateRoom = () => {
     props.socket.emit("create room", (response) => {
       props.socket.emit("join room", response.room.code, (res) => {
-        joinRoom(res.room.code, res.room);
         history.push(`/rooms/${response.room.code}`);
       });
     });
@@ -28,7 +27,6 @@ function Homepage(props) {
     } else {
       code = code.toUpperCase();
       props.socket.emit("join room", code, (res) => {
-        joinRoom(code, res.room);
         history.push(`/rooms/${code}`);
       });
     }
@@ -42,6 +40,7 @@ function Homepage(props) {
         alt="image of a dish containing greens and other veggies"
       />
       <h3 className="mb-5">Salad Bowl</h3>
+      {error && <div>YOU GOOFED UP, CAUSE {error}</div>}
       <Button
         className="home-button mb-4"
         variant="outline-primary"
@@ -67,6 +66,7 @@ function Homepage(props) {
             setRoomCodeInput(e.target.value);
           }}
           value={roomCodeInput}
+          maxLength="5"
         />
         <Button
           className="home-button mb-0"

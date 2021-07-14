@@ -2,17 +2,18 @@ import { Button, Form } from "react-bootstrap/";
 import React, { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
+import history from "../history";
 
 const WORD_REGEX = /[\W_]/g;
 
 const GameRoom = (props) => {
-  const { username, room, setUsername } = useContext(GlobalContext);
+  const { username, room, setUsername, error } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
   const [wordInput, setWordInput] = useState("");
   const [explanationInput, setExplanationInput] = useState("");
 
   useEffect(() => {
-    // listening to back and window closing
+    // Listening to back and window closing
     window.onpopstate = (e) => {
       console.log("going back!");
       if (room) props.socket.emit("page close", room.code, username);
@@ -73,6 +74,7 @@ const GameRoom = (props) => {
               setUsernameInput(e.target.value);
             }}
             value={usernameInput}
+            maxLength="64"
           />
           <Button type="submit">Submit</Button>
         </Form>
@@ -124,6 +126,7 @@ const GameRoom = (props) => {
             placeholder="Enter a Word or Short Phrase"
             onChange={(e) => setWordInput(e.target.value)}
             value={wordInput}
+            maxLength="64"
           />
           <Form.Control
             size="lg"
@@ -131,6 +134,7 @@ const GameRoom = (props) => {
             placeholder="Enter an Explanation (optional)"
             onChange={(e) => setExplanationInput(e.target.value)}
             value={explanationInput}
+            maxLength="256"
           />
           <Button type="submit">Submit</Button>
         </Form>
@@ -138,19 +142,16 @@ const GameRoom = (props) => {
     }
   };
 
-  if (!room) {
-    return <Redirect to="/" />;
-  } else {
-    return (
-      <>
-        <div>Room: {room.code}</div>
-        {renderUsernameForm()}
-        {renderStartGameButton()}
+  if (!room) return <Redirect to="/" />;
 
-        {room.phase == "submitting" && renderWordForm()}
-      </>
-    );
-  }
+  return (
+    <>
+      <div>Room: {room.code}</div>
+      {renderUsernameForm()}
+      {renderStartGameButton()}
+      {room.phase == "submitting" && renderWordForm()}
+    </>
+  );
 };
 
 export default GameRoom;

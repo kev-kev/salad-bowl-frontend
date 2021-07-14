@@ -5,20 +5,12 @@ const initialState = {
   roomCode: "",
   username: "",
   room: null,
+  error: "",
 };
 
 export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
-
-  function joinRoom(code, roomData) {
-    console.log("joining room: ", code);
-
-    dispatch({
-      type: "SET_ROOM",
-      payload: roomData,
-    });
-  }
 
   function setUsername(username) {
     dispatch({
@@ -42,17 +34,24 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  function setError(message) {
+    dispatch({
+      type: "SET_ERROR",
+      payload: message,
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
         roomCode: state.roomCode,
-        joinRoom,
         username: state.username,
         setUsername,
         room: state.room,
         error: state.error,
         updateRoom,
         clearState,
+        setError,
       }}
     >
       {children}

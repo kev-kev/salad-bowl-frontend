@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
 const SocketManager = (props) => {
-  const { updateRoom } = useContext(GlobalContext);
+  const { updateRoom, setError } = useContext(GlobalContext);
 
   useEffect(() => {
     // props.socket.on("new user created", (curRoom) => {
@@ -21,6 +21,10 @@ const SocketManager = (props) => {
 
     props.socket.on("update room", (curRoom) => {
       updateRoom(curRoom);
+    });
+
+    props.socket.on("error", (message) => {
+      setError(message);
     });
   }, []);
 
