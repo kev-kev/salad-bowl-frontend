@@ -146,7 +146,8 @@ const GameRoom = (props) => {
         <div>Room: {room.code}</div>
         {renderUsernameForm()}
         {renderStartGameButton()}
-        {renderWordForm()}
+
+        {room.phase == "submitting" && renderWordForm()}
       </>
     );
   }

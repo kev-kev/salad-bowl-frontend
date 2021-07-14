@@ -5,7 +5,6 @@ const initialState = {
   roomCode: "",
   username: "",
   room: null,
-  owner: null,
 };
 
 export const GlobalContext = createContext(initialState);
