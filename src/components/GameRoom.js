@@ -48,7 +48,7 @@ const GameRoom = (props) => {
 
   const handleUsernameSubmit = () => {
     if (checkIfValidName(usernameInput)) {
-      props.socket.emit("create user", usernameInput, room.code);
+      props.socket.emit("create user", usernameInput);
       setUsername(usernameInput);
     } else {
       console.log("Username is invalid!");
@@ -85,7 +85,7 @@ const GameRoom = (props) => {
   const renderStartGameButton = () => {
     if (!room.gameInProgress && room.roomOwner === username) {
       return (
-        <Button onClick={() => props.socket.emit("start game", room.code)}>
+        <Button onClick={() => props.socket.emit("start game")}>
           Start Game
         </Button>
       );
