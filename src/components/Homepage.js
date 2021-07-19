@@ -14,22 +14,17 @@ function Homepage(props) {
   }, []);
 
   const handleCreateRoom = () => {
-    props.socket.emit("create room", (response) => {
-      props.socket.emit("join room", response.room.code, () => {
-        history.push(`/rooms/${response.room.code}`);
-      });
+    props.socket.emit("create room", (res) => {
+      handleJoinRoom(res.roomCode);
     });
   };
 
-  const handleJoinRoom = (code) => {
-    if (code.length !== 5) {
-      console.log("Invalid room code");
-    } else {
-      code = code.toUpperCase();
-      props.socket.emit("join room", code, (res) => {
-        history.push(`/rooms/${code}`);
-      });
-    }
+  const handleJoinRoom = (roomCode) => {
+    roomCode = roomCode.toUpperCase();
+    props.socket.emit("join room", roomCode, () => {
+      console.log("pushing to history");
+      history.push(`/rooms/${roomCode}`);
+    });
   };
 
   return (
@@ -72,6 +67,7 @@ function Homepage(props) {
           className="home-button mb-0"
           variant="outline-secondary"
           type="submit"
+          disabled={roomCodeInput.length != 5}
         >
           Join Room
         </Button>

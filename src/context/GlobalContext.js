@@ -2,9 +2,16 @@ import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 
 const initialState = {
-  roomCode: "",
   username: "",
   room: null,
+  roomCode: "",
+  team1: [],
+  team2: [],
+  phase: "waiting",
+  roomOwner: "",
+  deck: [],
+  discard: [],
+  clueGiver: "",
   error: "",
 };
 
@@ -41,10 +48,17 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  function addUserToTeam(username, teamIndex) {
+    console.log("adding user to team");
+    dispatch({
+      type: "ADD_USER_TO_TEAM",
+      payload: { username, teamIndex },
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
-        roomCode: state.roomCode,
         username: state.username,
         setUsername,
         room: state.room,
@@ -52,6 +66,9 @@ export const GlobalProvider = ({ children }) => {
         updateRoom,
         clearState,
         setError,
+        addUserToTeam,
+        team1: state.team1,
+        team2: state.team2,
       }}
     >
       {children}

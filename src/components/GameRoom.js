@@ -18,19 +18,15 @@ const GameRoom = (props) => {
     // Listening to back and window closing
     window.onpopstate = (e) => {
       console.log("going back!");
-      if (room) props.socket.emit("page close", room.code, username);
+      if (room) props.socket.emit("page close");
     };
     window.onbeforeunload = () => {
-      if (room) props.socket.emit("page close", room.code, username);
+      if (room) props.socket.emit("page close");
     };
   });
 
   const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
-    // if (name.length < 1) {
-    //   setErrorMessage("Username is too short!");
-    //   return false;
-    // }
     const nameStr = name.replace(REGEX, "").toLowerCase();
     const len = Math.max(room.team1.users.length, room.team2.users.length);
     for (let i = 0; i < len; i++) {
