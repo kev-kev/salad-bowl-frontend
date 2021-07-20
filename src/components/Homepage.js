@@ -68,7 +68,7 @@ function Homepage(props) {
           className="home-button mb-0"
           variant="outline-secondary"
           type="submit"
-          disabled={roomCodeInput.length != 5}
+          disabled={roomCodeInput.length !== 5}
         >
           Join Room
         </Button>

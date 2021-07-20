@@ -88,14 +88,6 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  // function addUserToTeam(username, teamIndex) {
-  //   console.log("adding user to team");
-  //   dispatch({
-  //     type: "ADD_USER_TO_TEAM",
-  //     payload: { username, teamIndex },
-  //   });
-  // }
-
   return (
     <GlobalContext.Provider
       value={{
@@ -119,9 +111,6 @@ export const GlobalProvider = ({ children }) => {
         clearState,
         error: state.error,
         setError,
-        // room: state.room,
-        // updateRoom,
-        // addUserToTeam,
       }}
     >
       {children}

@@ -4,7 +4,7 @@ import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 
 const REGEX = /[\W_]/g; // Selects all spaces and punctuation, including underscores
-const MIN_USER_COUNT = 2;
+const MIN_USER_COUNT = 1;
 
 const GameRoom = (props) => {
   const {
@@ -27,7 +27,6 @@ const GameRoom = (props) => {
   useEffect(() => {
     // Listening to back and window closing
     window.onpopstate = (e) => {
-      console.log("going back!");
       if (roomCode) props.socket.emit("page close");
     };
     window.onbeforeunload = () => {
@@ -38,7 +37,6 @@ const GameRoom = (props) => {
   const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
     const nameStr = name.replace(REGEX, "").toLowerCase();
-    debugger;
     const len = Math.max(team1.length, team2.length);
     for (let i = 0; i < len; i++) {
       if (team1[i]) {
@@ -98,7 +96,7 @@ const GameRoom = (props) => {
       return (
         <Button
           onClick={() => props.socket.emit("start game")}
-          disabled={team1.users.length + team2.users.length < MIN_USER_COUNT}
+          disabled={team1.length + team2.length < MIN_USER_COUNT}
         >
           Start Game
         </Button>
@@ -115,11 +113,13 @@ const GameRoom = (props) => {
   };
 
   const checkIfValidWord = (word) => {
-    const wordStr = word.replace(REGEX, "").toLowerCase();
-    for (let i = 0; i < deck.length; i++) {
-      let curWord = deck[i].word.replace(REGEX, "").toLowerCase();
-      if (wordStr === curWord) {
-        return false;
+    if (deck) {
+      const wordStr = word.replace(REGEX, "").toLowerCase();
+      for (let i = 0; i < deck.length; i++) {
+        let curWord = deck[i].word.replace(REGEX, "").toLowerCase();
+        if (wordStr === curWord) {
+          return false;
+        }
       }
     }
     return true;

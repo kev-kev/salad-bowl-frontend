@@ -30,19 +30,16 @@ export default (state, action) => {
         ...state,
         roomOwner: action.payload,
       };
-    // case "ADD_USER_TO_TEAM":
-    //   console.log(action.payload);
-    //   if (action.payload.teamIndex === 0) {
-    //     return {
-    //       ...state,
-    //       team1: [...state.team1, action.payload.username],
-    //     };
-    //   } else if (action.payload.teamIndex === 1) {
-    //     return {
-    //       ...state,
-    //       team2: [...state.team2, action.payload.username],
-    //     };
-    //   }
+    case "UPDATE_DECK":
+      return {
+        ...state,
+        deck: action.payload,
+      };
+    case "UPDATE_DISCARD":
+      return {
+        ...state,
+        discard: action.payload,
+      };
     case "SET_ERROR":
       return {
         ...state,
