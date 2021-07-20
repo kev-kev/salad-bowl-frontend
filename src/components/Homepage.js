@@ -5,7 +5,7 @@ import saladBowlSVG from "../assets/images/saladbowl.svg";
 import history from "../history";
 
 function Homepage(props) {
-  const { clearState, error } = useContext(GlobalContext);
+  const { clearState, error, setRoomCode } = useContext(GlobalContext);
   const [roomCodeInput, setRoomCodeInput] = useState("");
 
   // Reset to initial state on render.
@@ -21,6 +21,7 @@ function Homepage(props) {
 
   const handleJoinRoom = (roomCode) => {
     roomCode = roomCode.toUpperCase();
+    setRoomCode(roomCode);
     props.socket.emit("join room", roomCode, () => {
       console.log("pushing to history");
       history.push(`/rooms/${roomCode}`);

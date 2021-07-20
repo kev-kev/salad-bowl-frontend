@@ -7,7 +7,17 @@ const REGEX = /[\W_]/g; // Selects all spaces and punctuation, including undersc
 const MIN_USER_COUNT = 2;
 
 const GameRoom = (props) => {
-  const { username, room, setUsername } = useContext(GlobalContext);
+  const {
+    username,
+    roomCode,
+    setUsername,
+    team1,
+    team2,
+    phase,
+    roomOwner,
+    clueGiver,
+    deck,
+  } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
   const [wordInput, setWordInput] = useState("");
   const [explanationInput, setExplanationInput] = useState("");
@@ -18,30 +28,27 @@ const GameRoom = (props) => {
     // Listening to back and window closing
     window.onpopstate = (e) => {
       console.log("going back!");
-      if (room) props.socket.emit("page close");
+      if (roomCode) props.socket.emit("page close");
     };
     window.onbeforeunload = () => {
-      if (room) props.socket.emit("page close");
+      if (roomCode) props.socket.emit("page close");
     };
   });
 
   const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
     const nameStr = name.replace(REGEX, "").toLowerCase();
-    const len = Math.max(room.team1.users.length, room.team2.users.length);
+    debugger;
+    const len = Math.max(team1.length, team2.length);
     for (let i = 0; i < len; i++) {
-      if (room.team1.users[i]) {
-        if (
-          room.team1.users[i].name.replace(REGEX, "").toLowerCase() === nameStr
-        ) {
+      if (team1[i]) {
+        if (team1[i].replace(REGEX, "").toLowerCase() === nameStr) {
           setErrorMessage("Username already taken!");
           return false;
         }
       }
-      if (room.team2.users[i]) {
-        if (
-          room.team2.users[i].name.replace(REGEX, "").toLowerCase() === nameStr
-        ) {
+      if (team2[i]) {
+        if (team2[i].replace(REGEX, "").toLowerCase() === nameStr) {
           setErrorMessage("Username already taken!");
           return false;
         }
@@ -52,8 +59,8 @@ const GameRoom = (props) => {
 
   const handleUsernameSubmit = () => {
     if (checkIfValidName(usernameInput)) {
-      props.socket.emit("create user", usernameInput);
       setUsername(usernameInput);
+      props.socket.emit("create user", usernameInput);
     }
   };
 
@@ -87,13 +94,11 @@ const GameRoom = (props) => {
   };
 
   const renderStartGameButton = () => {
-    if (room.phase === "waiting" && room.roomOwner === username) {
+    if (phase === "waiting" && roomOwner === username) {
       return (
         <Button
           onClick={() => props.socket.emit("start game")}
-          disabled={
-            room.team1.users.length + room.team2.users.length < MIN_USER_COUNT
-          }
+          disabled={team1.users.length + team2.users.length < MIN_USER_COUNT}
         >
           Start Game
         </Button>
@@ -111,8 +116,8 @@ const GameRoom = (props) => {
 
   const checkIfValidWord = (word) => {
     const wordStr = word.replace(REGEX, "").toLowerCase();
-    for (let i = 0; i < room.deck.length; i++) {
-      let curWord = room.deck[i].word.replace(REGEX, "").toLowerCase();
+    for (let i = 0; i < deck.length; i++) {
+      let curWord = deck[i].word.replace(REGEX, "").toLowerCase();
       if (wordStr === curWord) {
         return false;
       }
@@ -152,12 +157,12 @@ const GameRoom = (props) => {
   };
 
   const renderGuessingForm = () => {
-    if (room.clueGiver === username) {
+    if (clueGiver === username) {
       // display a card and pass/score buttons
       return (
         <div>
-          {room.deck[cardIndex].word}
-          {room.deck[cardIndex].explanation}
+          {deck[cardIndex].word}
+          {deck[cardIndex].explanation}
           <Button onClick={setCardIndex(cardIndex + 1)} variant="success">
             Score!
           </Button>
@@ -172,16 +177,17 @@ const GameRoom = (props) => {
     }
   };
 
-  if (!room) return <Redirect to="/" />;
-
+  if (!roomCode) {
+    return <Redirect to="/" />;
+  }
   return (
     <>
-      <div>Room: {room.code}</div>
+      <div>Room: {roomCode}</div>
       {errorMessage && <div>Error: {errorMessage}</div>}
       {renderUsernameForm()}
       {renderStartGameButton()}
-      {room.phase === "submitting" && renderWordForm()}
-      {room.phase === "guessing" && renderGuessingForm()}
+      {phase === "submitting" && renderWordForm()}
+      {phase === "guessing" && renderGuessingForm()}
     </>
   );
 };

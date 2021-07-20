@@ -1,10 +1,9 @@
 export default (state, action) => {
   switch (action.type) {
-    case "SET_ROOM":
-      // action.payload = {team1: [], team2: [], deck: [], discard: [], cluegiver: "user1"}
+    case "SET_ROOMCODE":
       return {
         ...state,
-        deck: action.payload.deck,
+        roomCode: action.payload,
       };
     case "SET_USERNAME":
       return {

@@ -3,7 +3,6 @@ import AppReducer from "./AppReducer";
 
 const initialState = {
   username: "",
-  room: null,
   roomCode: "",
   team1: [],
   team2: [],
@@ -23,14 +22,6 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "SET_USERNAME",
       payload: username,
-    });
-  }
-
-  function updateRoom(room) {
-    console.log("UpdateRoom running");
-    dispatch({
-      type: "SET_ROOM",
-      payload: room,
     });
   }
 
