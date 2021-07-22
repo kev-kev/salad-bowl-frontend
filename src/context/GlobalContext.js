@@ -4,14 +4,15 @@ import AppReducer from "./AppReducer";
 const initialState = {
   username: "",
   roomCode: "",
-  team1: [],
-  team2: [],
+  team1: { users: [], score: 0 },
+  team2: { users: [], score: 0 },
   phase: "waiting",
   roomOwner: "",
   deck: [],
   discard: [],
   clueGiver: "",
   error: "",
+  teamIndex: null,
 };
 
 export const GlobalContext = createContext(initialState);
@@ -32,10 +33,17 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  function updateTeam(teamArr, teamIndex) {
+  function updateTeamUsers(teamArr, teamIndex) {
     dispatch({
-      type: `UPDATE_TEAM${teamIndex + 1}`,
+      type: `UPDATE_TEAM${teamIndex + 1}_USERS`,
       payload: teamArr,
+    });
+  }
+
+  function setTeamIndex(teamIndex) {
+    dispatch({
+      type: "SET_TEAM_INDEX",
+      payload: teamIndex,
     });
   }
 
@@ -95,7 +103,9 @@ export const GlobalProvider = ({ children }) => {
         setUsername,
         team1: state.team1,
         team2: state.team2,
-        updateTeam,
+        updateTeamUsers,
+        teamIndex: state.teamIndex,
+        setTeamIndex,
         roomCode: state.roomCode,
         setRoomCode,
         phase: state.phase,

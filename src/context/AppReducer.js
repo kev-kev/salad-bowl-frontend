@@ -15,20 +15,36 @@ export default (state, action) => {
         ...state,
         phase: action.payload,
       };
-    case "UPDATE_TEAM1":
+    case "UPDATE_TEAM1_USERS":
       return {
         ...state,
-        team1: action.payload,
+        team1: {
+          ...state.team1,
+          users: action.payload,
+        },
       };
-    case "UPDATE_TEAM2":
+    case "UPDATE_TEAM2_USERS":
       return {
         ...state,
-        team2: action.payload,
+        team2: {
+          ...state.team2,
+          users: action.payload,
+        },
+      };
+    case "SET_TEAM_INDEX":
+      return {
+        ...state,
+        teamIndex: action.payload,
       };
     case "SET_ROOM_OWNER":
       return {
         ...state,
         roomOwner: action.payload,
+      };
+    case "SET_CLUE_GIVER":
+      return {
+        ...state,
+        clueGiver: action.payload,
       };
     case "UPDATE_DECK":
       return {

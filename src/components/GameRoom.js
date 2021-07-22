@@ -2,6 +2,8 @@ import { Button, Form } from "react-bootstrap/";
 import React, { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
+import GuessingForm from "./GuessingForm";
+import WordForm from "./WordForm";
 
 const REGEX = /[\W_]/g; // Selects all spaces and punctuation, including underscores
 const MIN_USER_COUNT = 1;
@@ -17,12 +19,11 @@ const GameRoom = (props) => {
     roomOwner,
     clueGiver,
     deck,
+    teamIndex,
   } = useContext(GlobalContext);
+
   const [usernameInput, setUsernameInput] = useState("");
-  const [wordInput, setWordInput] = useState("");
-  const [explanationInput, setExplanationInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [cardIndex, setCardIndex] = useState(0);
 
   useEffect(() => {
     // Listening to back and window closing
@@ -37,16 +38,16 @@ const GameRoom = (props) => {
   const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
     const nameStr = name.replace(REGEX, "").toLowerCase();
-    const len = Math.max(team1.length, team2.length);
+    const len = Math.max(team1.users.length, team2.users.length);
     for (let i = 0; i < len; i++) {
-      if (team1[i]) {
-        if (team1[i].replace(REGEX, "").toLowerCase() === nameStr) {
+      if (team1.users[i]) {
+        if (team1.users[i].replace(REGEX, "").toLowerCase() === nameStr) {
           setErrorMessage("Username already taken!");
           return false;
         }
       }
-      if (team2[i]) {
-        if (team2[i].replace(REGEX, "").toLowerCase() === nameStr) {
+      if (team2.users[i]) {
+        if (team2.users[i].replace(REGEX, "").toLowerCase() === nameStr) {
           setErrorMessage("Username already taken!");
           return false;
         }
@@ -96,84 +97,11 @@ const GameRoom = (props) => {
       return (
         <Button
           onClick={() => props.socket.emit("start game")}
-          disabled={team1.length + team2.length < MIN_USER_COUNT}
+          disabled={team1.users.length + team2.users.length < MIN_USER_COUNT}
         >
           Start Game
         </Button>
       );
-    }
-  };
-
-  const handleWordSubmit = () => {
-    if (wordInput && checkIfValidWord(wordInput)) {
-      props.socket.emit("submit word", wordInput, explanationInput);
-      setWordInput("");
-      setExplanationInput("");
-    }
-  };
-
-  const checkIfValidWord = (word) => {
-    if (deck) {
-      const wordStr = word.replace(REGEX, "").toLowerCase();
-      for (let i = 0; i < deck.length; i++) {
-        let curWord = deck[i].word.replace(REGEX, "").toLowerCase();
-        if (wordStr === curWord) {
-          return false;
-        }
-      }
-    }
-    return true;
-  };
-
-  const renderWordForm = () => {
-    return (
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleWordSubmit();
-        }}
-      >
-        <Form.Control
-          size="lg"
-          type="text"
-          placeholder="Enter a Word or Short Phrase"
-          onChange={(e) => setWordInput(e.target.value)}
-          value={wordInput}
-          maxLength="64"
-        />
-        <Form.Control
-          size="lg"
-          type="text"
-          placeholder="Enter an Explanation (optional)"
-          onChange={(e) => setExplanationInput(e.target.value)}
-          value={explanationInput}
-          maxLength="256"
-        />
-        <Button type="submit" disabled={wordInput.length < 1}>
-          Submit
-        </Button>
-      </Form>
-    );
-  };
-
-  const renderGuessingForm = () => {
-    if (clueGiver === username) {
-      // display a card and pass/score buttons
-      return (
-        <div>
-          {deck[cardIndex].word}
-          {deck[cardIndex].explanation}
-          <Button onClick={setCardIndex(cardIndex + 1)} variant="success">
-            Score!
-          </Button>
-          <Button onClick={setCardIndex(cardIndex + 1)} variant="danger">
-            Pass
-          </Button>
-        </div>
-      );
-    } else {
-      // render guessing form for team where isGuessing = true
-      // for every
     }
   };
 
@@ -186,8 +114,15 @@ const GameRoom = (props) => {
       {errorMessage && <div>Error: {errorMessage}</div>}
       {renderUsernameForm()}
       {renderStartGameButton()}
-      {phase === "submitting" && renderWordForm()}
-      {phase === "guessing" && renderGuessingForm()}
+      <WordForm socket={props.socket} />
+      {phase === "guessing" && (
+        <GuessingForm
+          username={username}
+          clueGiver={clueGiver}
+          deck={deck}
+          phase={phase}
+        />
+      )}
     </>
   );
 };

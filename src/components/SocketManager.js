@@ -5,11 +5,13 @@ const SocketManager = (props) => {
   const {
     setError,
     clearState,
-    updateTeam,
+    updateTeamUsers,
     setRoomOwner,
     setPhase,
     updateDeck,
     updateDiscard,
+    setClueGiver,
+    setTeamIndex,
   } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -21,8 +23,16 @@ const SocketManager = (props) => {
       setRoomOwner(username);
     });
 
-    props.socket.on("update team", (teamArr, teamIndex) => {
-      updateTeam(teamArr, teamIndex);
+    props.socket.on("set clue giver", (username) => {
+      setClueGiver(username);
+    });
+
+    props.socket.on("update team users", (teamArr, teamIndex) => {
+      updateTeamUsers(teamArr, teamIndex);
+    });
+
+    props.socket.on("set team index", (teamIndex) => {
+      setTeamIndex(teamIndex);
     });
 
     props.socket.on("update deck", (deckArr) => {
