@@ -23,7 +23,6 @@ function Homepage(props) {
     roomCode = roomCode.toUpperCase();
     setRoomCode(roomCode);
     props.socket.emit("join room", roomCode, () => {
-      console.log("pushing to history");
       history.push(`/rooms/${roomCode}`);
     });
   };

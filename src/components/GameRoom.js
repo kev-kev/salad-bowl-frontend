@@ -4,6 +4,7 @@ import { GlobalContext } from "../context/GlobalContext";
 import { Redirect } from "react-router-dom";
 import GuessingForm from "./GuessingForm";
 import WordForm from "./WordForm";
+import history from "../history";
 
 const REGEX = /[\W_]/g; // Selects all spaces and punctuation, including underscores
 const MIN_USER_COUNT = 1;
@@ -34,6 +35,12 @@ const GameRoom = (props) => {
       if (roomCode) props.socket.emit("page close");
     };
   });
+
+  useEffect(() => {
+    if (phase === "submitting" && !username) {
+      history.push("/");
+    }
+  }, [phase]);
 
   const checkIfValidName = (name) => {
     // Returns false if name isn't present or unqique (non-case sensitive)
@@ -105,9 +112,7 @@ const GameRoom = (props) => {
     }
   };
 
-  if (!roomCode) {
-    return <Redirect to="/" />;
-  }
+  if (!roomCode) return <Redirect to="/" />;
   return (
     <>
       <div>Room: {roomCode}</div>
