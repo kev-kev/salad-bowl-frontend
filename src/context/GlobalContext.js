@@ -40,12 +40,19 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  function setTeamIndex(teamIndex) {
+  function setTeamScore(teamIndex, score) {
     dispatch({
-      type: "SET_TEAM_INDEX",
-      payload: teamIndex,
+      type: `SET_TEAM${teamIndex + 1}_SCORE`,
+      payload: score,
     });
   }
+
+  // function setTeamIndex(teamIndex) {
+  //   dispatch({
+  //     type: "SET_TEAM_INDEX",
+  //     payload: teamIndex,
+  //   });
+  // }
 
   function setPhase(phase) {
     dispatch({
@@ -104,8 +111,9 @@ export const GlobalProvider = ({ children }) => {
         team1: state.team1,
         team2: state.team2,
         updateTeamUsers,
-        teamIndex: state.teamIndex,
-        setTeamIndex,
+        // teamIndex: state.teamIndex,
+        // setTeamIndex,
+        setTeamScore,
         roomCode: state.roomCode,
         setRoomCode,
         phase: state.phase,

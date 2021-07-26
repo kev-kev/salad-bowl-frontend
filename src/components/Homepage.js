@@ -29,11 +29,7 @@ function Homepage(props) {
 
   return (
     <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-      <img
-        src={saladBowlSVG}
-        className="home-logo"
-        alt="image of a dish containing greens and other veggies"
-      />
+      <img src={saladBowlSVG} className="home-logo" />
       <h3 className="mb-5">Salad Bowl</h3>
       {error && <div>YOU GOOFED UP, CAUSE {error}</div>}
       <Button

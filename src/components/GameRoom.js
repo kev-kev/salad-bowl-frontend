@@ -20,11 +20,11 @@ const GameRoom = (props) => {
     roomOwner,
     clueGiver,
     deck,
-    teamIndex,
   } = useContext(GlobalContext);
 
   const [usernameInput, setUsernameInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [teamIndex, setTeamIndex] = useState(null);
 
   useEffect(() => {
     // Listening to back and window closing
@@ -66,7 +66,9 @@ const GameRoom = (props) => {
   const handleUsernameSubmit = () => {
     if (checkIfValidName(usernameInput)) {
       setUsername(usernameInput);
-      props.socket.emit("create user", usernameInput);
+      props.socket.emit("create user", usernameInput, (res) => {
+        setTeamIndex(res.teamIndex);
+      });
     }
   };
 
@@ -112,6 +114,14 @@ const GameRoom = (props) => {
     }
   };
 
+  const renderScore = () => {
+    if (teamIndex === 0) {
+      return team1.score;
+    } else {
+      return team2.score;
+    }
+  };
+
   if (!roomCode) return <Redirect to="/" />;
   return (
     <>
@@ -121,12 +131,16 @@ const GameRoom = (props) => {
       {renderStartGameButton()}
       <WordForm socket={props.socket} />
       {phase === "guessing" && (
-        <GuessingForm
-          username={username}
-          clueGiver={clueGiver}
-          deck={deck}
-          phase={phase}
-        />
+        <div>
+          <span>Score: {renderScore()}</span>
+          <GuessingForm
+            username={username}
+            clueGiver={clueGiver}
+            deck={deck}
+            phase={phase}
+            teamIndex={teamIndex}
+          />
+        </div>
       )}
     </>
   );

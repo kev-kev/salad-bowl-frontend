@@ -31,6 +31,22 @@ export default (state, action) => {
           users: action.payload,
         },
       };
+    case "SET_TEAM1_SCORE":
+      return {
+        ...state,
+        team1: {
+          ...state.team1,
+          score: action.payload,
+        },
+      };
+    case "SET_TEAM2_SCORE":
+      return {
+        ...state,
+        team2: {
+          ...state.team2,
+          score: action.payload,
+        },
+      };
     case "SET_TEAM_INDEX":
       return {
         ...state,

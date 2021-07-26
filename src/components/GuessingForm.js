@@ -3,29 +3,30 @@ import React, { useContext, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
 const GuessingForm = (props) => {
-  // const { username, clueGiver, deck, phase } = useContext(GlobalContext);
-  const [cardIndex, setCardIndex] = useState(0);
+  const [deckIndex, setDeckIndex] = useState(0);
   const deckLen = props.deck.length;
 
   const handleScore = () => {
-    if (cardIndex < deckLen) {
-      setCardIndex(cardIndex + 1);
-      props.socket.emit("set score");
+    if (deckIndex < deckLen) {
+      setDeckIndex(deckIndex + 1);
+      const curWord = props.deck[deckIndex].word;
+      props.socket.emit("score word", props.teamIndex, curWord);
     }
   };
   if (props.clueGiver === props.username) {
     // display a card and pass/score buttons
+    debugger;
     return (
       <div>
         Am giving clues
-        <div>Word: {props.deck[cardIndex].word}</div>
-        <div>Explanation: {props.deck[cardIndex].explanation}</div>
+        <div>Word: {props.deck[deckIndex].word}</div>
+        <div>Explanation: {props.deck[deckIndex].explanation}</div>
         <Button onClick={() => handleScore} variant="success">
           Score!
         </Button>
-        {/* <Button onClick={setCardIndex(cardIndex + 1)} variant="danger">
-            Pass
-          </Button> */}
+        <Button onClick={setDeckIndex(deckIndex + 1)} variant="danger">
+          Pass
+        </Button>
       </div>
     );
   } else {

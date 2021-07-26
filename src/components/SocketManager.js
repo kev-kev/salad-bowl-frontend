@@ -12,6 +12,7 @@ const SocketManager = (props) => {
     updateDiscard,
     setClueGiver,
     setTeamIndex,
+    setTeamScore,
   } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -31,9 +32,13 @@ const SocketManager = (props) => {
       updateTeamUsers(teamArr, teamIndex);
     });
 
-    props.socket.on("set team index", (teamIndex) => {
-      setTeamIndex(teamIndex);
+    props.socket.on("set team score", (teamIndex, score) => {
+      setTeamScore(teamIndex, score);
     });
+
+    // props.socket.on("set team index", (teamIndex) => {
+    //   setTeamIndex(teamIndex);
+    // });
 
     props.socket.on("update deck", (deckArr) => {
       updateDeck(deckArr);
