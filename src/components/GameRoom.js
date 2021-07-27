@@ -139,6 +139,7 @@ const GameRoom = (props) => {
             deck={deck}
             phase={phase}
             teamIndex={teamIndex}
+            socket={props.socket}
           />
         </div>
       )}

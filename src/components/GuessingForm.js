@@ -5,30 +5,36 @@ import { GlobalContext } from "../context/GlobalContext";
 const GuessingForm = (props) => {
   const [deckIndex, setDeckIndex] = useState(0);
   const deckLen = props.deck.length;
+  const deck = props.deck;
 
   const handleScore = () => {
     if (deckIndex < deckLen) {
       setDeckIndex(deckIndex + 1);
-      const curWord = props.deck[deckIndex].word;
+      const curWord = deck[deckIndex].word;
       props.socket.emit("score word", props.teamIndex, curWord);
     }
   };
-  if (props.clueGiver === props.username) {
-    // display a card and pass/score buttons
-    debugger;
+
+  const renderClueGiverForm = () => {
     return (
-      <div>
+      <>
         Am giving clues
-        <div>Word: {props.deck[deckIndex].word}</div>
-        <div>Explanation: {props.deck[deckIndex].explanation}</div>
-        <Button onClick={() => handleScore} variant="success">
+        <div>Word: {deck[deckIndex].word}</div>
+        <div>Explanation: {deck[deckIndex].explanation}</div>
+        <Button onClick={() => handleScore()} variant="success">
           Score!
         </Button>
-        <Button onClick={setDeckIndex(deckIndex + 1)} variant="danger">
+        <Button onClick={() => setDeckIndex(deckIndex + 1)} variant="danger">
           Pass
         </Button>
-      </div>
+      </>
     );
+  };
+
+  if (props.clueGiver === props.username) {
+    // display a card and pass/score buttons
+    // debugger;
+    return <div>{renderClueGiverForm()}</div>;
   } else {
     return <div>Am guessing</div>;
     // render guessing form for team where isGuessing = true
