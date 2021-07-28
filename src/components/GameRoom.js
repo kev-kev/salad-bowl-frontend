@@ -20,6 +20,7 @@ const GameRoom = (props) => {
     roomOwner,
     clueGiver,
     deck,
+    guessingTeamIndex,
   } = useContext(GlobalContext);
 
   const [usernameInput, setUsernameInput] = useState("");
@@ -140,6 +141,7 @@ const GameRoom = (props) => {
             phase={phase}
             teamIndex={teamIndex}
             socket={props.socket}
+            guessingTeamIndex={guessingTeamIndex}
           />
         </div>
       )}

@@ -12,7 +12,7 @@ const initialState = {
   discard: [],
   clueGiver: "",
   error: "",
-  teamIndex: null,
+  guessingTeamIndex: null,
 };
 
 export const GlobalContext = createContext(initialState);
@@ -47,12 +47,12 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
-  // function setTeamIndex(teamIndex) {
-  //   dispatch({
-  //     type: "SET_TEAM_INDEX",
-  //     payload: teamIndex,
-  //   });
-  // }
+  function setGuessingTeamIndex(teamIndex) {
+    dispatch({
+      type: "SET_GUESSING_TEAM_INDEX",
+      payload: teamIndex,
+    });
+  }
 
   function setPhase(phase) {
     dispatch({
@@ -111,8 +111,6 @@ export const GlobalProvider = ({ children }) => {
         team1: state.team1,
         team2: state.team2,
         updateTeamUsers,
-        // teamIndex: state.teamIndex,
-        // setTeamIndex,
         setTeamScore,
         roomCode: state.roomCode,
         setRoomCode,
@@ -129,6 +127,8 @@ export const GlobalProvider = ({ children }) => {
         clearState,
         error: state.error,
         setError,
+        setGuessingTeamIndex,
+        guessingTeamIndex: state.guessingTeamIndex,
       }}
     >
       {children}

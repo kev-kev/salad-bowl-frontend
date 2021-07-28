@@ -47,10 +47,10 @@ export default (state, action) => {
           score: action.payload,
         },
       };
-    case "SET_TEAM_INDEX":
+    case "SET_GUESSING_TEAM_INDEX":
       return {
         ...state,
-        teamIndex: action.payload,
+        guessingTeamIndex: action.payload,
       };
     case "SET_ROOM_OWNER":
       return {

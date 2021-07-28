@@ -11,7 +11,7 @@ const SocketManager = (props) => {
     updateDeck,
     updateDiscard,
     setClueGiver,
-    setTeamIndex,
+    setGuessingTeamIndex,
     setTeamScore,
   } = useContext(GlobalContext);
 
@@ -36,9 +36,9 @@ const SocketManager = (props) => {
       setTeamScore(teamIndex, score);
     });
 
-    // props.socket.on("set team index", (teamIndex) => {
-    //   setTeamIndex(teamIndex);
-    // });
+    props.socket.on("set guessing team index", (teamIndex) => {
+      setGuessingTeamIndex(teamIndex);
+    });
 
     props.socket.on("update deck", (deckArr) => {
       console.log("updating deck!");
