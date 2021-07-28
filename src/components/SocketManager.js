@@ -41,6 +41,7 @@ const SocketManager = (props) => {
     // });
 
     props.socket.on("update deck", (deckArr) => {
+      console.log("updating deck!");
       updateDeck(deckArr);
     });
 

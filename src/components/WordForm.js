@@ -3,28 +3,19 @@ import { GlobalContext } from "../context/GlobalContext";
 import { Button, Form } from "react-bootstrap/";
 
 const WordForm = (props) => {
-  const {
-    username,
-    roomCode,
-    setUsername,
-    team1,
-    team2,
-    phase,
-    roomOwner,
-    clueGiver,
-    deck,
-  } = useContext(GlobalContext);
+  const { phase, deck } = useContext(GlobalContext);
   const [wordInput, setWordInput] = useState("");
   const [explanationInput, setExplanationInput] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const REGEX = /[\W_]/g;
 
   const handleWordSubmit = () => {
     if (wordInput && checkIfValidWord(wordInput)) {
       props.socket.emit("submit word", wordInput, explanationInput);
-      setWordInput("");
-      setExplanationInput("");
     }
+    setWordInput("");
+    setExplanationInput("");
   };
 
   const checkIfValidWord = (word) => {
