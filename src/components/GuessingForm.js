@@ -44,26 +44,28 @@ const GuessingForm = (props) => {
     setGuessInput("");
   };
 
+  const renderGuessForm = () => {
+    <Form
+      onsubmit={(e) => {
+        e.preventDefault();
+        handleGuessSubmit();
+      }}
+    >
+      <Form.Control
+        size="lg"
+        type="text"
+        placeholder="Guess the Word or Phrase"
+        onChange={(e) => {
+          setGuessInput(e.target.value);
+        }}
+      />
+    </Form>;
+  };
+
   if (props.clueGiver === props.username) {
     return <div>{renderClueGiverForm()}</div>;
   } else if (props.teamIndex === props.guessingTeamIndex) {
-    return (
-      <Form
-        onsubmit={(e) => {
-          e.preventDefault();
-          handleGuessSubmit();
-        }}
-      >
-        <Form.Control
-          size="lg"
-          type="text"
-          placeholder="Guess the Word or Phrase"
-          onChange={(e) => {
-            setGuessInput(e.target.value);
-          }}
-        />
-      </Form>
-    );
+    return <div>{renderGuessForm()}</div>;
   }
   return null;
 };
