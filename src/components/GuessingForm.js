@@ -45,21 +45,23 @@ const GuessingForm = (props) => {
   };
 
   const renderGuessForm = () => {
-    <Form
-      onsubmit={(e) => {
-        e.preventDefault();
-        handleGuessSubmit();
-      }}
-    >
-      <Form.Control
-        size="lg"
-        type="text"
-        placeholder="Guess the Word or Phrase"
-        onChange={(e) => {
-          setGuessInput(e.target.value);
+    return (
+      <Form
+        onsubmit={(e) => {
+          e.preventDefault();
+          handleGuessSubmit();
         }}
-      />
-    </Form>;
+      >
+        <Form.Control
+          size="lg"
+          type="text"
+          placeholder="Guess the Word or Phrase"
+          onChange={(e) => {
+            setGuessInput(e.target.value);
+          }}
+        />
+      </Form>
+    );
   };
 
   if (props.clueGiver === props.username) {
