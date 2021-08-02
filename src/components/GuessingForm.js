@@ -47,7 +47,7 @@ const GuessingForm = (props) => {
   const renderGuessForm = () => {
     return (
       <Form
-        onsubmit={(e) => {
+        onSubmit={(e) => {
           e.preventDefault();
           handleGuessSubmit();
         }}
@@ -64,12 +64,15 @@ const GuessingForm = (props) => {
     );
   };
 
-  if (props.clueGiver === props.username) {
-    return <div>{renderClueGiverForm()}</div>;
-  } else if (props.teamIndex === props.guessingTeamIndex) {
-    return <div>{renderGuessForm()}</div>;
+  if (props.teamIndex === props.guessingTeamIndex) {
+    if (props.clueGiver === props.username) {
+      return <div>{renderClueGiverForm()}</div>;
+    } else {
+      return <div>{renderGuessForm()}</div>;
+    }
+  } else {
+    return null;
   }
-  return null;
 };
 
 export default GuessingForm;
