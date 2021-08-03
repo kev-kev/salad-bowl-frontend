@@ -16,9 +16,18 @@ const GuessingForm = (props) => {
           Am giving clues
           <span>Word: {deck[deckIndex].word}</span>
           <span>Explanation: {deck[deckIndex].explanation}</span>
-          {/* <Button onClick={() => handleScore()} variant="success">
+          <Button
+            onClick={() =>
+              props.socket.emit(
+                "score word",
+                props.teamIndex,
+                deck[deckIndex].word
+              )
+            }
+            variant="success"
+          >
             Score!
-          </Button> */}
+          </Button>
           <Button
             onClick={() => {
               setDeckIndex(deckIndex + 1);
@@ -30,6 +39,7 @@ const GuessingForm = (props) => {
         </>
       );
     } else {
+      props.socket.emit("new round");
       return <span>Out of Cards! Move onto the next round now, G</span>;
     }
   };
