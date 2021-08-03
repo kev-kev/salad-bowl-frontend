@@ -123,6 +123,11 @@ const GameRoom = (props) => {
     }
   };
 
+  const handleLeaveRoom = () => {
+    if (roomCode) props.socket.emit("page close");
+    history.push("/");
+  };
+
   if (!roomCode) return <Redirect to="/" />;
   return (
     <>
@@ -145,6 +150,9 @@ const GameRoom = (props) => {
           />
         </div>
       )}
+      <Button variant="danger" onClick={() => handleLeaveRoom()}>
+        Leave Room
+      </Button>
     </>
   );
 };
